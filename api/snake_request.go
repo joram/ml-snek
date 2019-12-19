@@ -20,3 +20,12 @@ func (sr SnakeRequest) OtherSnakes() []Snake {
 	return otherSnakes
 }
 
+
+func (sr SnakeRequest) GetSnake(id string) *Snake {
+	for _, snake := range sr.Board.Snakes {
+		if snake.ID == id {
+			return &snake
+		}
+	}
+	return nil
+}
