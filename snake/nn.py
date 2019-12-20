@@ -43,7 +43,7 @@ def gen_training_data():
 def make_model():
     model = Sequential()
     model.add(Dense(units=128, activation='relu', input_dim=363))
-    model.add(Dense(units=32, activation='softmax'))
+    model.add(Dense(units=64, activation='softmax'))
     model.compile(
         loss='sparse_categorical_crossentropy',
         optimizer='sgd',
@@ -66,7 +66,7 @@ def load_model(filepath="model.h5"):
 
 def train_model(model, save_filepath="model.h5"):
     x_train, y_train = gen_training_data()
-    model.fit(x_train, y_train, epochs=100, batch_size=50)
+    model.fit(x_train, y_train, epochs=1000, batch_size=50)
 
     loss_and_metrics = model.evaluate(x_train, y_train, batch_size=128)
     print(loss_and_metrics)

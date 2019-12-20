@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from nn import load_model
+from nn import load_model, image_to_input
 import json
 from PIL import Image
 import os
@@ -73,9 +73,10 @@ def move():
     data = bottle.request.json
     print(json.dumps(data))
     pixels = _make_pixels(data)
+    input = image_to_input(pixels, data["board"]["width"], data["board"]["height"])
+    p = model.predict_classes(numpy.array([input]))
 
     directions = ['up', 'down', 'left', 'right']
-    p = model.predict_classes(numpy.array([pixels]))
     prediction = p[0]
     direction = directions.index(prediction)
     return move_response(direction)
