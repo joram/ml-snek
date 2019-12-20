@@ -5,3 +5,4 @@ keras
 bottle
 gunicorn
 gevent
+tensorflow
