@@ -78,7 +78,7 @@ def move():
 
     directions = ['up', 'down', 'left', 'right']
     prediction = p[0]
-    direction = directions.index(prediction)
+    direction = directions[prediction]
     return move_response(direction)
 
 
