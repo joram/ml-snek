@@ -61,6 +61,7 @@ def load_model(filepath="model.h5"):
     # load weights into new model
     loaded_model.load_weights("model.h5")
     print("Loaded model from disk")
+    return loaded_model
 
 
 def train_model(model, save_filepath="model.h5"):
