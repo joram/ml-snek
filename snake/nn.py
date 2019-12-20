@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from PIL import Image
+from Pillow import Image
 import os
 import numpy
 from keras.models import Sequential
