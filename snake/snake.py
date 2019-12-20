@@ -55,9 +55,7 @@ def _make_pixels(data):
     for snake in data["board"]["snakes"]:
         i = 0
         for c in snake["body"]:
-            curr = pixels[c["x"], c["y"]]
-            curr[0] = len(snake["body"]) - i
-            pixels[c["x"], c["y"]] = curr
+            pixels[c["x"], c["y"]] = (len(snake["body"]) - i, 0, 0)
             i += 1
 
     # food
