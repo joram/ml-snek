@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from nn import load_model
 import json
-from PIL import Image
+from Pillow import Image
 import os
 import bottle
 from api import ping_response, start_response, move_response, end_response
