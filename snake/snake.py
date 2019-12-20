@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-from snake.nn import load_model
+from nn import load_model
 import json
 from PIL import Image
 import os
 import bottle
-from snake.api import ping_response, start_response, move_response, end_response
+from api import ping_response, start_response, move_response, end_response
 import numpy
 
 model = load_model()
