@@ -1,8 +1,12 @@
-Pillow
-matplotlib
-numpy
-keras
+# Pillow
+# matplotlib
+# numpy
+# keras
 bottle
-gunicorn
-gevent
-tensorflow
+# gunicorn
+# gevent
+# tensorflow
+
+torch
+torchvision
+gym

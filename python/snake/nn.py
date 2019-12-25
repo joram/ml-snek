@@ -7,7 +7,7 @@ from keras.layers import Dense
 from keras.models import model_from_json
 
 
-def image_to_input(pixels, w, h):
+def _image_to_input(pixels, w, h):
     values = []
     for x in range(0, w):
         for y in range(0, h):
@@ -21,12 +21,12 @@ def image_to_input(pixels, w, h):
 def gen_training_data():
     inputs = []
     outputs = []
-    for filename in os.listdir("../images/"):
-        filepath = os.path.join("../images/", filename)
+    for filename in os.listdir("../../images/"):
+        filepath = os.path.join("../../images/", filename)
         im = Image.open(filepath)
         pixels = im.load()
         w, h = im.size
-        values = image_to_input(pixels, w, h)
+        values = _image_to_input(pixels, w, h)
         directions = ["up", "down", "left", "right"]
         try:
             direction = filename.split("::")[1].replace(".jpg", "")

@@ -43,7 +43,8 @@ func bitmaps(snakeRequests []api.SnakeRequest, snakeID string) {
 	}
 }
 
-func createImage(sr, next *api.SnakeRequest, snakeID string){
+func createImage(sr, next *api.SnakeRequest, snakeID string)ls
+{
 	img := image.NewRGBA(image.Rect(0, 0, sr.Board.Width, sr.Board.Height))
 
 	// age of body
