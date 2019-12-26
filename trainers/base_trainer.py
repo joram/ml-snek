@@ -8,5 +8,5 @@ class BaseTrainer(object):
     def load(self):
         raise NotImplementedError()
 
-    def train(self):
+    def train(self, epocs=1):
         raise NotImplementedError()

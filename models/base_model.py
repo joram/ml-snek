@@ -8,5 +8,5 @@ class BaseModel(object):
     def load(self):
         raise NotImplementedError()
 
-    def train(self):
+    def train(self, input_values, expected_output):
         raise NotImplementedError()

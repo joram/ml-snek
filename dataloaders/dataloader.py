@@ -2,12 +2,13 @@ from dataloaders.base_dataloader import BaseDataloader
 
 from torch.utils.data import DataLoader
 
+
 class Dataloader(BaseDataloader):
 
     def __init__(self, dataset):
         self._dataset = dataset
 
-    def frame_to_image(self, frame, winner_id):
+    def _frame_to_image(self, frame, winner_id):
             w = frame["board"]["height"]
             h = frame["board"]["width"]
 
@@ -42,6 +43,15 @@ class Dataloader(BaseDataloader):
 
             return body_data, food_data, my_head_data, their_head_data
 
-    def __next__(self):
+    def __iter__(self):
         for frame, winner_id, direction in self._dataset:
-            body_data, food_data, my_head_data, their_head_data = self.frame_to_image(frame, winner_id)
+            body_data, food_data, my_head_data, their_head_data = self._frame_to_image(frame, winner_id)
+            yield {
+                "input": {
+                    "body": body_data,
+                    "food": food_data,
+                    "my_head": my_head_data,
+                    "their_heads": their_head_data,
+                },
+                "output": direction,
+            }
