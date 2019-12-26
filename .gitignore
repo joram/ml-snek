@@ -1,5 +1,3 @@
-.idea
-images/*
-venv*
+data*
 vendor*
-*__pycache__*
+.idea*
