@@ -13,15 +13,19 @@ class BasicTrainer(BaseTrainer):
     def load(self):
         raise NotImplementedError()
 
-    def train(self, epocs=1):
-        for i in range(0, epocs):
-            for data in self.dataloader:
-                input_values = [list(data["input"][key].values()) for key in ['body', 'food', 'my_head', 'their_heads']]
-                output_value = {
-                    "UP": 0,
-                    "DOWN": 1,
-                    "LEFT": 2,
-                    "RIGHT": 3,
-                }[data["output"]]
-                output_values = [output_value]*4
-                self.model.train(input_values, output_values)
+    def train(self, epocs):
+        i = 0
+        for data in self.dataloader:
+            input_values = [list(data["input"][key].values()) for key in ['body', 'food', 'my_head', 'their_heads']]
+            output_value = {
+                "UP": 0,
+                "DOWN": 1,
+                "LEFT": 2,
+                "RIGHT": 3,
+            }[data["output"]]
+            output_values = [output_value]*4
+            self.model.train(input_values, output_values)
+            print(f"training {output_values}")
+            if i >= epocs:
+                break
+            i += 1

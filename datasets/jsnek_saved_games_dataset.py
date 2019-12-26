@@ -28,7 +28,7 @@ class JSnekDataset(Dataset):
             try:
                 with open(filepath, "r") as f:
                     frames = json.load(f)
-                    self._counts.append(len(frames))
+                    self._counts.append(len(frames)-1)
             except:
                 self._counts.append(0)
         self._n_frames = sum(self._counts)
@@ -72,24 +72,28 @@ class JSnekDataset(Dataset):
         return direction
 
     def __len__(self):
+
         return self._n_frames
 
     def __getitem__(self, index):
-        i = 0
-        count = 0
-        for n in self._counts:
-            count += n
-            i += 1
-        filepath = self._files[i-1]
+        try:
+            file_index = 0
+            frame_index = index
+            for count in self._counts:
+                if frame_index - count > 0:
+                    file_index += 1
+                    frame_index -= count
 
-        with open(filepath) as f:
-            content = f.read()
-        frames = json.loads(content)
+            filepath = self._files[file_index]
+            with open(filepath) as f:
+                content = f.read()
+            frames = json.loads(content)
 
-        snakes = frames[-1]["board"]["snakes"]
-        winner_id = snakes[0]["id"]
+            snakes = frames[-1]["board"]["snakes"]
+            winner_id = snakes[0]["id"]
 
-        for i in range(0, len(frames)-2):
-            frame = frames[i]
-            next_frame = frames[i+1]
+            frame = frames[frame_index]
+            next_frame = frames[frame_index+1]
             return frame, winner_id, self._get_direction(frame, next_frame, winner_id)
+        except Exception as e:
+            return self.__getitem__(index-1)
