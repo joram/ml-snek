@@ -9,33 +9,41 @@ class JSnekDataset(Dataset):
     DATA_DIR = os.path.join(CURR_DIR, "../data/")
 
     def __init__(self):
+        self._winner_id = None
         self._files = self._existing_files()
-        self._counts = []
         self._n_frames = -1
 
         # load cached
-        counts_filepath = os.path.join(self.DATA_DIR, "counts.json")
+        counts_filepath = os.path.join(self.DATA_DIR, "valid_indices.json")
         if os.path.exists(counts_filepath):
             with open(counts_filepath, "r") as f:
-                self._counts = json.load(f)
-                self._n_frames = sum(self._counts)
-            if len(self._files) == len(self._counts):
-                return
-        self._counts = []
+                self._index_map = json.load(f)
+                self._n_frames = len(self._index_map.keys())-1
 
-        # count
+            if len(self._files) == self._index_map["file_count"]:
+                return
+
+        # create index map
+        self._index_map = {}
+        global_index = 0
         for filepath in self._files:
-            try:
-                with open(filepath, "r") as f:
-                    frames = json.load(f)
-                    self._counts.append(len(frames)-1)
-            except:
-                self._counts.append(0)
-        self._n_frames = sum(self._counts)
+            with open(filepath, "r") as f:
+                frames = json.load(f)
+                for file_index in range(0, len(frames)):
+                    try:
+                        self._get_direction(frames[file_index], frames[file_index+1], self._get_winner_id())
+                        self._index_map[global_index] = {
+                            "index": file_index,
+                            "filepath": filepath,
+                        }
+                    except KeyError:
+                        pass
+        self._index_map["file_count"] = len(self._files)
+        self._n_frames = len(self._index_map.keys())-1
 
         # save cache
         with open(counts_filepath, "w") as f:
-            f.write(json.dumps(self._counts))
+            f.write(json.dumps(self._index_map))
 
         print(f"have {len(self._files)} games, and {self._n_frames} frames")
 
@@ -71,29 +79,30 @@ class JSnekDataset(Dataset):
         }[(delta_x, delta_y)]
         return direction
 
-    def __len__(self):
+    def _get_winner_id(self):
+        if self._winner_id is not None:
+            return self._winner_id
 
+        filepath = self._files[-1]
+        with open(filepath) as f:
+            content = f.read()
+        frames = json.loads(content)
+
+        snakes = frames[-1]["board"]["snakes"]
+        winner_id = snakes[0]["id"]
+        self._winner_id = winner_id
+        return winner_id
+
+    def __len__(self):
         return self._n_frames
 
     def __getitem__(self, index):
-        try:
-            file_index = 0
-            frame_index = index
-            for count in self._counts:
-                if frame_index - count > 0:
-                    file_index += 1
-                    frame_index -= count
+        metadata = self._index_map[index]
+        with open(metadata["filepath"]) as f:
+            content = f.read()
 
-            filepath = self._files[file_index]
-            with open(filepath) as f:
-                content = f.read()
-            frames = json.loads(content)
-
-            snakes = frames[-1]["board"]["snakes"]
-            winner_id = snakes[0]["id"]
-
-            frame = frames[frame_index]
-            next_frame = frames[frame_index+1]
-            return frame, winner_id, self._get_direction(frame, next_frame, winner_id)
-        except Exception as e:
-            return self.__getitem__(index-1)
+        frame_index = metadata["index"]
+        frames = json.loads(content)
+        frame = frames[frame_index]
+        next_frame = frames[frame_index+1]
+        return frame, self._get_winner_id(), self._get_direction(frame, next_frame, self._get_winner_id())
