@@ -11,7 +11,7 @@ import logging
 import sys
 import traceback
 
-from ml_snek import Example, get_module_version
+from ml_snek import get_module_version
 
 ###############################################################################
 
@@ -55,11 +55,7 @@ def main():
         dbg = args.debug
 
         # Do your work here - preferably in a class or function,
-        # passing in your args. E.g.
-        exe = Example(args.first)
-        exe.update_value(args.second)
-        print("First : {}\nSecond: {}".format(exe.get_value(), exe.get_previous_value()))
-
+        
     except Exception as e:
         log.error("=============================================")
         if dbg:

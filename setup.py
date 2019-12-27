@@ -45,6 +45,7 @@ interactive_requirements = [
 ]
 
 requirements = [
+    "boto3",
     "torch",
     "torchvision",
     "gym",
@@ -78,7 +79,7 @@ setup(
     description="Machine learning snake",
     entry_points={
         "console_scripts": [
-            "my_example=ml_snek.bin.my_example:main"
+            "snek_train=ml_snek.bin.ml_snek_train:main"
         ],
     },
     install_requires=requirements,
