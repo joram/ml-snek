@@ -34,7 +34,6 @@ class JSnekDataset(Dataset):
                         self._get_direction(
                             frames[file_index],
                             frames[file_index + 1],
-                            self._get_winner_id(),
                         )
                         self._index_map[global_index] = {
                             "index": file_index,
@@ -123,7 +122,7 @@ class JSnekDataset(Dataset):
         frame = frames[frame_index]
         next_frame = frames[frame_index + 1]
 
-        direction = self._get_direction(frame, next_frame, winner_id)
+        direction = self._get_direction(frame, next_frame)
 
         return frame, winner_id, direction
 
