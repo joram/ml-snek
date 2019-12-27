@@ -1,3 +1,4 @@
+import numpy
 from .base_dataloader import BaseDataloader
 
 
@@ -22,12 +23,14 @@ class Dataloader(BaseDataloader):
                 for i in range(len(body)-1, 1, -1):
                     coord = body[i]
                     body_data[coord["x"], coord["y"]] = i
+            body_data = list(body_data.values())
 
             # food
             food_data = data
             foods = frame["board"]["food"]
             for coord in foods:
                 food_data[coord["x"], coord["y"]] = 1
+            food_data = list(food_data.values())
 
             # head
             my_head_data = data
@@ -38,18 +41,24 @@ class Dataloader(BaseDataloader):
                     my_head_data[head["x"], head["y"]] = 1
                 else:
                     their_head_data[head["x"], head["y"]] = 1
+            my_head_data = list(my_head_data.values())
+            their_head_data = list(their_head_data.values())
 
-            return body_data, food_data, my_head_data, their_head_data
+            return numpy.array([]+body_data+food_data+my_head_data+their_head_data)
+
 
     def __iter__(self):
         for frame, winner_id, direction in self._dataset:
-            body_data, food_data, my_head_data, their_head_data = self._frame_to_image(frame, winner_id)
-            yield {
-                "input": {
-                    "body": body_data,
-                    "food": food_data,
-                    "my_head": my_head_data,
-                    "their_heads": their_head_data,
-                },
-                "output": direction,
-            }
+            input_values = self._frame_to_image(frame, winner_id)
+
+            try:
+                output_value = {
+                    "UP": 0,
+                    "DOWN": 1,
+                    "LEFT": 2,
+                    "RIGHT": 3,
+                }[direction]
+            except:
+                continue
+
+            yield input_values, output_value

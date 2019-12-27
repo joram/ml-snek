@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 class JSnekDataset(Dataset):
 
     CURR_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_DIR = os.path.join(CURR_DIR, "../data/")
+    DATA_DIR = os.path.join(CURR_DIR, "../../data/")
 
     def __init__(self):
         self._winner_id = None

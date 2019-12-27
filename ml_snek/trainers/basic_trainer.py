@@ -15,17 +15,9 @@ class BasicTrainer(BaseTrainer):
 
     def train(self, epochs):
         i = 0
-        for data in self.dataloader:
-            input_values = [list(data["input"][key].values()) for key in ['body', 'food', 'my_head', 'their_heads']]
-            output_value = {
-                "UP": 0,
-                "DOWN": 1,
-                "LEFT": 2,
-                "RIGHT": 3,
-            }[data["output"]]
-            output_values = [output_value]*4
-            self.model.train(input_values, output_values)
-            print(f"training {output_values}")
+        for input_values, output_value in self.dataloader:
+            self.model.train([input_values], [output_value])
+            print(f"training {output_value}")
             if i >= epochs:
                 break
             i += 1

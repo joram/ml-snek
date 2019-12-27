@@ -11,19 +11,12 @@ def main():
     dataloader = Dataloader(dataset)
     model = RandomForestModel()
     trainer = BasicTrainer(model, dataloader)
-    trainer.train(epochs=500)
+    trainer.train(epochs=100)
 
     i = 0
-    for data in dataloader:
-        input_values = [list(data["input"][key].values()) for key in ['body', 'food', 'my_head', 'their_heads']]
-        output_value = {
-            "UP": 0,
-            "DOWN": 1,
-            "LEFT": 2,
-            "RIGHT": 3,
-        }[data["output"]]
-        expected = [output_value] * 4
-        actual = model.model.predict(input_values)
+    for input_values, output_value in dataloader:
+        expected = [output_value]
+        actual = model.model.predict([input_values])
         print(f"expected: {expected}\tactual: {actual}")
         if i > 10:
             break
