@@ -55,20 +55,23 @@ class JSnekDataset(Dataset):
                     files.append(os.path.join(r, file))
         return files
 
-    def _get_direction(self, frame, next_frame, winner_id):
+    def _get_direction(self, frame, next_frame):
 
         head = None
         for snake in frame["board"]["snakes"]:
-            if snake["id"] == winner_id:
+            if snake["id"] == self._get_winner_id():
                 head = snake["body"][0]
                 break
 
         next_head = None
         for snake in next_frame["board"]["snakes"]:
-            if snake["id"] == winner_id:
+            if snake["id"] == self._get_winner_id():
                 next_head = snake["body"][0]
                 break
 
+        if head is None or next_head is None:
+            raise KeyError
+        
         delta_x = next_head["x"] - head["x"]
         delta_y = next_head["y"] - head["y"]
         direction = {
