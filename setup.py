@@ -46,7 +46,7 @@ interactive_requirements = [
 
 requirements = [
     "boto3",
-    "torch",
+    "torch==1.3.1",
     "torchvision",
     "gym",
     "scikit-learn==0.22"
