@@ -44,7 +44,11 @@ interactive_requirements = [
     "matplotlib",
 ]
 
-requirements = []
+requirements = [
+    "torch",
+    "torchvision",
+    "gym",
+]
 
 extra_requirements = {
     "test": test_requirements,
