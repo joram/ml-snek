@@ -1,4 +1,4 @@
-from trainers.base_trainer import BaseTrainer
+from .base_trainer import BaseTrainer
 
 
 class BasicTrainer(BaseTrainer):
@@ -13,7 +13,7 @@ class BasicTrainer(BaseTrainer):
     def load(self):
         raise NotImplementedError()
 
-    def train(self, epocs):
+    def train(self, epochs):
         i = 0
         for data in self.dataloader:
             input_values = [list(data["input"][key].values()) for key in ['body', 'food', 'my_head', 'their_heads']]
@@ -26,6 +26,6 @@ class BasicTrainer(BaseTrainer):
             output_values = [output_value]*4
             self.model.train(input_values, output_values)
             print(f"training {output_values}")
-            if i >= epocs:
+            if i >= epochs:
                 break
             i += 1
