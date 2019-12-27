@@ -1,4 +1,4 @@
-from trainers.base_trainer import BaseTrainer
+from .base_trainer import BaseTrainer
 
 
 class BasicTrainer(BaseTrainer):

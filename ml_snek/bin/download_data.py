@@ -4,7 +4,7 @@ import boto3
 import os
 
 CURR_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(CURR_DIR, "../data/")
+DATA_DIR = os.path.join(CURR_DIR, "../../data/")
 
 
 def _existing_files():
@@ -16,7 +16,7 @@ def _existing_files():
     return files
 
 
-def get_games():
+def main():
     if not os.path.exists(DATA_DIR):
         os.mkdir(DATA_DIR)
 
@@ -45,5 +45,5 @@ def get_games():
     print(f"have {i} games")
 
 
-if __name__ == "__main__":
-    get_games()
+if __name__ == '__main__':
+    main()

@@ -49,6 +49,7 @@ requirements = [
     "torch",
     "torchvision",
     "gym",
+    "scikit-learn==0.22"
 ]
 
 extra_requirements = {
@@ -79,7 +80,8 @@ setup(
     description="Machine learning snake",
     entry_points={
         "console_scripts": [
-            "snek_train=ml_snek.bin.ml_snek_train:main"
+            "snek_train=ml_snek.bin.train:main",
+            "snek_download=ml_snek.bin.download_data:main",
         ],
     },
     install_requires=requirements,
