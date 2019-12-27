@@ -28,19 +28,23 @@ class JSnekDataset(Dataset):
         global_index = 0
         for filepath in self._files:
             with open(filepath, "r") as f:
-                frames = json.load(f)
-                for file_index in range(0, len(frames)-1):
-                    try:
-                        self._get_direction(
-                            frames[file_index],
-                            frames[file_index + 1],
-                        )
-                        self._index_map[global_index] = {
-                            "index": file_index,
-                            "filepath": filepath,
-                        }
-                    except KeyError:
-                        pass
+                try:
+                    frames = json.load(f)
+                    for file_index in range(0, len(frames)-1):
+                            self._get_direction(
+                                frames[file_index],
+                                frames[file_index + 1],
+                            )
+                            self._index_map[global_index] = {
+                                "index": file_index,
+                                "filepath": filepath,
+                            }
+                except KeyError:
+                    pass
+                except TypeError:
+                    pass
+                except json.decoder.JSONDecodeError:
+                    pass
         self._index_map["file_count"] = len(self._files)
         self._n_frames = len(self._index_map.keys()) - 1
 
@@ -59,7 +63,6 @@ class JSnekDataset(Dataset):
         return files
 
     def _get_direction(self, frame, next_frame):
-
         head = None
         for snake in frame["board"]["snakes"]:
             if snake["id"] == self._get_winner_id():
@@ -101,28 +104,20 @@ class JSnekDataset(Dataset):
 
     def __getitem__(self, index):
 
-        if 0 < index >= len(self):
-            raise (IndexError)
+        if 0 > index:
+            raise IndexError
+        if index >= len(self):
+            raise IndexError
 
-        file_index = 0
-        frame_index = index
-        for count in self._counts:
-            if frame_index - count > 0:
-                file_index += 1
-                frame_index -= count
-
-        filepath = self._files[file_index]
+        metadata = self._index_map[str(index)]
+        filepath = metadata["filepath"]
+        frame_index = metadata["index"]
         with open(filepath) as f:
             content = f.read()
         frames = json.loads(content)
-
-        snakes = frames[-1]["board"]["snakes"]
-        winner_id = snakes[0]["id"]
-
         frame = frames[frame_index]
         next_frame = frames[frame_index + 1]
-
         direction = self._get_direction(frame, next_frame)
 
-        return frame, winner_id, direction
+        return frame, self._get_winner_id(), direction
 
