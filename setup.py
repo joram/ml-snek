@@ -67,8 +67,8 @@ extra_requirements = {
 }
 
 setup(
-    author="Gregory Johnson",
-    author_email="gregjohnso@gmail.com",
+    author="John Oram & Gregory Johnson",
+    author_email="john@oram.ca, gregjohnso@gmail.com",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
