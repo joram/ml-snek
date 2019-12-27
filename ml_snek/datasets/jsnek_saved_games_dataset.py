@@ -29,7 +29,7 @@ class JSnekDataset(Dataset):
         for filepath in self._files:
             with open(filepath, "r") as f:
                 frames = json.load(f)
-                for file_index in range(0, len(frames)):
+                for file_index in range(0, len(frames)-1):
                     try:
                         self._get_direction(
                             frames[file_index],
