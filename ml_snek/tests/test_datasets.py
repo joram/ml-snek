@@ -8,6 +8,8 @@ def test_jsnek_dataset():
 
     assert len(dataset)
 
+    assert len(dataset) >= 488521
+
     assert dataset[0]
 
     assert dataset[len(dataset) - 1]

@@ -16,6 +16,8 @@ class BasicTrainer(BaseTrainer):
     def train(self, epochs):
         i = 0
         for input_values, output_value in self.dataloader:
+            print(input_values)
+            print(output_value)
             self.model.train([input_values], [output_value])
             print(f"training {output_value}")
             if i >= epochs:
