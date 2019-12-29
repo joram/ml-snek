@@ -46,18 +46,22 @@ class Dataloader(BaseDataloader):
 
             return numpy.array([]+body_data+food_data+my_head_data+their_head_data)
 
+    def _string_dir_to_int(self, direction):
+        return {
+            "UP": 0,
+            "DOWN": 1,
+            "LEFT": 2,
+            "RIGHT": 3,
+        }[direction]
+
+    def __getitem__(self, index):
+        frame, winner_id, direction = self._dataset[index]
+        input_values = self._frame_to_image(frame, winner_id)
+        output_value = self._string_dir_to_int(direction)
+        return input_values, output_value
+
     def __iter__(self):
         for frame, winner_id, direction in self._dataset:
             input_values = self._frame_to_image(frame, winner_id)
-
-            try:
-                output_value = {
-                    "UP": 0,
-                    "DOWN": 1,
-                    "LEFT": 2,
-                    "RIGHT": 3,
-                }[direction]
-            except:
-                continue
-
+            output_value = self._string_dir_to_int(direction)
             yield input_values, output_value
