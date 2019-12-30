@@ -6,6 +6,7 @@ from .jsnek_saved_games_dataset import JSnekDataset
 
 
 class JSnekFlatDataset(JSnekDataset):
+
     def __init__(self, jsnek_dataset=None):
         super(self)
 
