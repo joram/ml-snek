@@ -1,15 +1,11 @@
 import pytest
 
-import torch
-
 from ..datasets.jsnek_base_dataset import JSnekBaseDataset
 from ..datasets.jsnek_dataset import JSnekDataset
 
 
 def dataset_tests(dataset):
     assert len(dataset)
-
-    assert len(dataset) >= 488521
 
     assert dataset[0]
 

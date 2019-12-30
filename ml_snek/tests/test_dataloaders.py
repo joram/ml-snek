@@ -3,7 +3,8 @@ from torch.utils.data import DataLoader
 
 def test_flat_dataloader(dataset_jsnek):
 
-    dataloader = DataLoader(dataset_jsnek)
+    dataloader = DataLoader(dataset_jsnek, batch_size=32)
+
     first_item = dataloader.__iter__().__next__()
 
     assert type(first_item) == tuple

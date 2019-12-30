@@ -14,13 +14,10 @@ Docs: https://docs.pytest.org/en/latest/example/simple.html
       https://docs.pytest.org/en/latest/plugins.html#requiring-loading-plugins-in-a-test-module-or-conftest-file
 """
 
-import json
 from pathlib import Path
-from typing import Dict
-
 import pytest
 
-from ..datasets.jsnek_base_dataset import JSnekBaseDataset
+from ..datasets.jsnek_dataset import JSnekDataset
 
 
 @pytest.fixture
@@ -29,8 +26,8 @@ def data_dir() -> Path:
 
 
 @pytest.fixture
-def dataset_jsnek() -> JSnekBaseDataset:
-    return JSnekBaseDataset()
+def dataset_jsnek() -> JSnekDataset:
+    return JSnekDataset()
 
 
 # # Fixtures can simply be added as a parameter to the other test or fixture functions to expose them.

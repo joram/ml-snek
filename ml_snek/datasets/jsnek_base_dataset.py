@@ -10,9 +10,9 @@ class JSnekBaseDataset(Dataset):
 
     CURR_DIR = os.path.dirname(os.path.abspath(__file__))
     DATA_DIR = os.path.join(CURR_DIR, "../../data/")
-    CACHED_FRAMES = {}
 
     def __init__(self):
+        self._winner_id = None
         self._files = self._existing_files()
         self._n_frames = -1
 
@@ -23,7 +23,7 @@ class JSnekBaseDataset(Dataset):
                 self._index_map = json.load(f)
                 self._n_frames = len(self._index_map.keys()) - 1
 
-            if len(self._files) == self._index_map[str(-1)]:
+            if len(self._files) == self._index_map["file_count"]:
                 return
 
         # create index map
@@ -31,10 +31,8 @@ class JSnekBaseDataset(Dataset):
         global_index = 0
         for filepath in self._files:
             with open(filepath, "r") as f:
-
                 try:
                     frames = json.load(f)
-<<<<<<< HEAD:ml_snek/datasets/jsnek_base_dataset.py
                     for file_index in range(0, len(frames) - 1):
                         self._get_direction(
                             frames[file_index], frames[file_index + 1],
@@ -47,74 +45,41 @@ class JSnekBaseDataset(Dataset):
                     pass
                 except TypeError:
                     pass
-=======
->>>>>>> 04c073972d5442b90969f9d191eb81fa99c6fd07:ml_snek/datasets/jsnek_saved_games_dataset.py
                 except json.decoder.JSONDecodeError:
-                    continue
-
-                try:
-                    winner_id = self._get_winner_id(frames)
-                except:
-                    print(filepath, frames)
-                    raise
-                if winner_id is None:
-                    continue
-
-                for file_index in range(0, len(frames)-1):
-                    try:
-                        self._get_direction(
-                            frames[file_index],
-                            frames[file_index + 1],
-                            winner_id
-                        )
-                    except KeyError as e:
-                        continue
-                    self._index_map[global_index] = {
-                        "index": file_index,
-                        "filepath": filepath,
-                    }
-                    global_index += 1
-        self._index_map[-1] = len(self._files)
+                    pass
+        self._index_map["file_count"] = len(self._files)
         self._n_frames = len(self._index_map.keys()) - 1
 
         # save cache
         with open(counts_filepath, "w") as f:
-            f.write(json.dumps(self._index_map, indent=4, sort_keys=True))
+            f.write(json.dumps(self._index_map))
 
         print(f"have {len(self._files)} games, and {self._n_frames} frames")
-
-    def __len__(self):
-        return self._n_frames
 
     def _existing_files(self):
         files = []
         for r, d, f in os.walk(self.DATA_DIR):
             for file in f:
-                if ".json" in file and file != "valid_indices.json":
+                if ".json" in file:
                     files.append(os.path.join(r, file))
         return files
 
-    def _get_direction(self, frame, next_frame, winner_id):
+    def _get_direction(self, frame, next_frame):
         head = None
         for snake in frame["board"]["snakes"]:
-            if snake["id"] == winner_id:
+            if snake["id"] == self._get_winner_id():
                 head = snake["body"][0]
                 break
 
         next_head = None
         for snake in next_frame["board"]["snakes"]:
-            if snake["id"] == winner_id:
+            if snake["id"] == self._get_winner_id():
                 next_head = snake["body"][0]
                 break
 
         if head is None or next_head is None:
-<<<<<<< HEAD:ml_snek/datasets/jsnek_base_dataset.py
             raise KeyError
 
-=======
-            raise KeyError("missing head")
-        
->>>>>>> 04c073972d5442b90969f9d191eb81fa99c6fd07:ml_snek/datasets/jsnek_saved_games_dataset.py
         delta_x = next_head["x"] - head["x"]
         delta_y = next_head["y"] - head["y"]
         direction = {(0, 1): "UP", (0, -1): "DOWN", (1, 0): "RIGHT", (-1, 0): "LEFT"}[
@@ -122,29 +87,22 @@ class JSnekBaseDataset(Dataset):
         ]
         return direction
 
-    def _get_winner_id(self, frames):
-        snakes = frames[-1]["board"]["snakes"]
-        try:
-            winner_id = snakes[0]["id"]
-        except IndexError:
-            return None
-        return winner_id
+    def _get_winner_id(self):
+        if self._winner_id is not None:
+            return self._winner_id
 
-    def _get_frames_from_file(self, global_index):
-        metadata = self._index_map[str(global_index)]
-        filepath = metadata["filepath"]
-        frame_index = metadata["index"]
-
-        results = self.CACHED_FRAMES.get(filepath)
-        if results is not None:
-            return results
-
+        filepath = self._files[-1]
         with open(filepath) as f:
             content = f.read()
         frames = json.loads(content)
 
-        self.CACHED_FRAMES[filepath] = (frames, frame_index)
-        return frames, frame_index
+        snakes = frames[-1]["board"]["snakes"]
+        winner_id = snakes[0]["id"]
+        self._winner_id = winner_id
+        return winner_id
+
+    def __len__(self):
+        return self._n_frames
 
     def __getitem__(self, index):
 
@@ -153,10 +111,14 @@ class JSnekBaseDataset(Dataset):
         if index >= len(self):
             raise IndexError
 
-        frames, frame_index = self._get_frames_from_file(index)
+        metadata = self._index_map[str(index)]
+        filepath = metadata["filepath"]
+        frame_index = metadata["index"]
+        with open(filepath) as f:
+            content = f.read()
+        frames = json.loads(content)
         frame = frames[frame_index]
         next_frame = frames[frame_index + 1]
-        direction = self._get_direction(frame, next_frame, self._get_winner_id(frames))
+        direction = self._get_direction(frame, next_frame)
 
-        return frame, self._get_winner_id(frames), direction
-
+        return frame, self._get_winner_id(), direction
