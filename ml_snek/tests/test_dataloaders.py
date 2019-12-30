@@ -3,10 +3,13 @@ from torch.utils.data import DataLoader
 
 def test_flat_dataloader(dataset_jsnek):
 
-    dataloader = DataLoader(dataset_jsnek, batch_size=32, shuffle=True)
+    dataloader = DataLoader(dataset_jsnek)
+    first_item = dataloader.__iter__().__next__()
 
-    # import pdb
+    assert type(first_item) == tuple
 
-    # pdb.set_trace()
+    assert len(first_item) == 2
 
-    pass
+    assert len(first_item[0]) == 484
+
+    assert type(first_item[1]) == int
