@@ -3,7 +3,10 @@ import os
 from torch.utils.data import Dataset
 
 
-class JSnekDataset(Dataset):
+class JSnekBaseDataset(Dataset):
+    """
+    Base dataset, returns dictionary of board state, winner ID, and the move the winner took that turn
+    """
 
     CURR_DIR = os.path.dirname(os.path.abspath(__file__))
     DATA_DIR = os.path.join(CURR_DIR, "../../data/")
@@ -30,15 +33,14 @@ class JSnekDataset(Dataset):
             with open(filepath, "r") as f:
                 try:
                     frames = json.load(f)
-                    for file_index in range(0, len(frames)-1):
-                            self._get_direction(
-                                frames[file_index],
-                                frames[file_index + 1],
-                            )
-                            self._index_map[global_index] = {
-                                "index": file_index,
-                                "filepath": filepath,
-                            }
+                    for file_index in range(0, len(frames) - 1):
+                        self._get_direction(
+                            frames[file_index], frames[file_index + 1],
+                        )
+                        self._index_map[global_index] = {
+                            "index": file_index,
+                            "filepath": filepath,
+                        }
                 except KeyError:
                     pass
                 except TypeError:
@@ -77,7 +79,7 @@ class JSnekDataset(Dataset):
 
         if head is None or next_head is None:
             raise KeyError
-        
+
         delta_x = next_head["x"] - head["x"]
         delta_y = next_head["y"] - head["y"]
         direction = {(0, 1): "UP", (0, -1): "DOWN", (1, 0): "RIGHT", (-1, 0): "LEFT"}[

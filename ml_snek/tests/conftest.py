@@ -20,7 +20,7 @@ from typing import Dict
 
 import pytest
 
-from ..datasets.jsnek_saved_games_dataset import JSnekDataset
+from ..datasets.jsnek_base_dataset import JSnekBaseDataset
 
 
 @pytest.fixture
@@ -29,14 +29,14 @@ def data_dir() -> Path:
 
 
 @pytest.fixture
-def dataset_jsnek() -> JSnekDataset:
-    return JSnekDataset()
+def dataset_jsnek() -> JSnekBaseDataset:
+    return JSnekBaseDataset()
 
 
-# Fixtures can simply be added as a parameter to the other test or fixture functions to expose them.
-# If we had multiple tests that wanted to use the contents of this file, we could simply add "loaded_example_values" as
-# a parameter for each test.
-@pytest.fixture
-def loaded_example_values(data_dir) -> Dict[str, int]:
-    with open(data_dir / "example_values.json", "r") as read_in:
-        return json.load(read_in)
+# # Fixtures can simply be added as a parameter to the other test or fixture functions to expose them.
+# # If we had multiple tests that wanted to use the contents of this file, we could simply add "loaded_example_values" as
+# # a parameter for each test.
+# @pytest.fixture
+# def loaded_example_values(data_dir) -> Dict[str, int]:
+#     with open(data_dir / "example_values.json", "r") as read_in:
+#         return json.load(read_in)

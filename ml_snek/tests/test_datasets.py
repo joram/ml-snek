@@ -1,11 +1,12 @@
 import pytest
 
-from ..datasets.jsnek_saved_games_dataset import JSnekDataset
+import torch
+
+from ..datasets.jsnek_base_dataset import JSnekBaseDataset
+from ..datasets.jsnek_dataset import JSnekDataset
 
 
-def test_jsnek_dataset():
-    dataset = JSnekDataset()
-
+def dataset_tests(dataset):
     assert len(dataset)
 
     assert dataset[0]
@@ -17,3 +18,32 @@ def test_jsnek_dataset():
 
     with pytest.raises(IndexError):
         dataset[len(dataset)]
+
+
+def test_jsnek_base_dataset():
+    jsnek_dataset = JSnekBaseDataset()
+    dataset_tests(jsnek_dataset)
+
+
+def test_jsnek_dataset():
+    jsnek_flat_dataset = JSnekDataset(board_state_as_vector=False)
+    dataset_tests(jsnek_flat_dataset)
+
+    board_state, direction = jsnek_flat_dataset[0]
+    assert len(board_state.shape) == 3
+    assert len(direction) == 4
+
+    jsnek_flat_dataset = JSnekDataset(board_state_as_vector=True)
+    dataset_tests(jsnek_flat_dataset)
+
+    board_state, direction = jsnek_flat_dataset[0]
+    assert len(board_state.shape) == 1
+    assert len(direction) == 4
+
+    jsnek_flat_dataset = JSnekDataset(
+        board_state_as_vector=False, direction_as_index=True
+    )
+    dataset_tests(jsnek_flat_dataset)
+
+    board_state, direction = jsnek_flat_dataset[0]
+    assert len(direction) == 1
