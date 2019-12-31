@@ -26,6 +26,13 @@ def main():
     )
 
     parser.add_argument(
+        "--model_save_path",
+        type=str,
+        default="./model.pkl",
+        help="default location to save the model",
+    )
+
+    parser.add_argument(
         "--dataset_name",
         type=str,
         default="ml_snek.datasets.jsnek_dataset.JSnekDataset",
@@ -34,7 +41,7 @@ def main():
     parser.add_argument(
         "--dataset_kwargs",
         type=json.loads,
-        default='{"board_state_as_vector": 1, "max_frames":1000}',
+        default='{"board_state_as_vector": 1, "max_frames": 50000}',
         help="kwargs for the dataset",
     )
 
@@ -67,6 +74,8 @@ def main():
         dataset, **args.dataloader_kwargs
     )
 
+    print(len(dataset))
+
     args.trainer_kwargs["model"] = model
     args.trainer_kwargs["dataloader"] = dataloader
 
@@ -74,11 +83,9 @@ def main():
 
     trainer.train()
 
+    model.save(args.model_save_path)
+
     dataset = dataloader.dataset
-
-    import pdb
-
-    pdb.set_trace()
 
     # random spot check evaluation
     for i in range(0, 100):

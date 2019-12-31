@@ -1,11 +1,8 @@
-
-
 class BaseModel(object):
-
-    def save(self):
+    def save(self, save_path):
         raise NotImplementedError()
 
-    def load(self):
+    def load(self, save_path):
         raise NotImplementedError()
 
     def train(self, input_values, expected_output):
