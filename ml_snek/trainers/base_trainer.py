@@ -1,7 +1,4 @@
-
-
 class BaseTrainer(object):
-
     def save(self):
         raise NotImplementedError()
 

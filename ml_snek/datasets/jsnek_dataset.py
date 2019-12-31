@@ -20,8 +20,10 @@ class JSnekDataset(JSnekBaseDataset):
 
     """
 
-    def __init__(self, board_state_as_vector=False, direction_as_index=False, max_size=-1):
-        super().__init__(max_size)
+    def __init__(
+        self, board_state_as_vector=False, direction_as_index=False, max_frames=-1
+    ):
+        super().__init__(max_frames=max_frames)
 
         self.board_state_as_vector = board_state_as_vector
         self.direction_as_index = direction_as_index

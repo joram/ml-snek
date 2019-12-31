@@ -34,7 +34,7 @@ def main():
     parser.add_argument(
         "--dataset_kwargs",
         type=json.loads,
-        default='{"board_state_as_vector": 1, "max_size":10}',
+        default='{"board_state_as_vector": 1, "max_frames":1000}',
         help="kwargs for the dataset",
     )
 
@@ -76,12 +76,16 @@ def main():
 
     dataset = dataloader.dataset
 
+    import pdb
+
+    pdb.set_trace()
+
     # random spot check evaluation
     for i in range(0, 100):
         index = random.randint(0, len(dataset) - 1)
-        input_values, output_value = dataloader[index]
+        input_values, output_value = dataset[index]
         expected = [output_value]
-        actual = model.model.predict([input_values])
+        actual = model(input_values)
         print(f"expected: {expected}\tactual: {actual}")
 
 
