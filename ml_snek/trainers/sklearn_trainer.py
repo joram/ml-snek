@@ -18,7 +18,7 @@ class SKLearnTrainer(BaseTrainer):
     def train(self):
         i = 0
         for epoch in range(self.n_epochs):
-            for i, (x, y) in self.dataloader:
+            for i, (x, y) in enumerate(self.dataloader):
                 self.model.train(x, y)
                 if i % 10 == 0:
                     print(f"training {i}/{self.n_epochs}")
