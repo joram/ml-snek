@@ -16,4 +16,3 @@ def test_flat_dataloader(dataset_jsnek):
     for i in range(len(first_item)):
 
         assert len(first_item[i]) == batch_size
-
