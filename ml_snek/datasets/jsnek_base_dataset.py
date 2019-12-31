@@ -9,9 +9,9 @@ class JSnekBaseDataset(Dataset):
     DATA_DIR = os.path.join(CURR_DIR, "../../data/")
     CACHED_FRAMES = {}
 
-    def __init__(self):
+    def __init__(self, max_frames=-1):
         self._files = self._existing_files()
-        self._n_frames = -1
+        self._n_frames = max_frames
 
         # load cached
         counts_filepath = os.path.join(self.DATA_DIR, "valid_indices.json")
@@ -19,6 +19,8 @@ class JSnekBaseDataset(Dataset):
             with open(counts_filepath, "r") as f:
                 self._index_map = json.load(f)
                 self._n_frames = len(self._index_map.keys()) - 1
+                if max_frames != -1:
+                    self._n_frames = max_frames
 
             if len(self._files) == self._index_map[str(-1)]:
                 return
@@ -62,6 +64,9 @@ class JSnekBaseDataset(Dataset):
         # save cache
         with open(counts_filepath, "w") as f:
             f.write(json.dumps(self._index_map, indent=4, sort_keys=True))
+
+        if max_frames != -1:
+            self._n_frames = max_frames
 
         print(f"have {len(self._files)} games, and {self._n_frames} frames")
 

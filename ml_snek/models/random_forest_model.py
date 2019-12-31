@@ -8,3 +8,9 @@ class RandomForest(BaseModel):
 
     def train(self, input_values, expected_output):
         self.model.fit(input_values, expected_output)
+
+    def __call__(self, x):
+        if len(x.size()) == 1:
+            x = x.view(1, len(x))
+
+        return self.model.predict(x)

@@ -22,6 +22,12 @@ def test_jsnek_base_dataset():
     jsnek_dataset = JSnekBaseDataset()
     dataset_tests(jsnek_dataset)
 
+    assert len(jsnek_dataset) > 1000
+
+    jsnek_dataset = JSnekBaseDataset(10)
+
+    assert len(jsnek_dataset) == 10
+
 
 def test_jsnek_dataset():
     jsnek_flat_dataset = JSnekDataset(board_state_as_vector=False)
@@ -45,3 +51,9 @@ def test_jsnek_dataset():
 
     board_state, direction = jsnek_flat_dataset[0]
     assert len(direction) == 1
+
+    assert len(jsnek_flat_dataset) > 1000
+
+    jsnek_flat_dataset = JSnekDataset(max_size=10)
+
+    assert len(jsnek_flat_dataset) == 10
