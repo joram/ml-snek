@@ -3,6 +3,7 @@ from sklearn.ensemble import RandomForestClassifier
 
 
 class RandomForest(BaseModel):
+
     def __init__(self, **kwargs):
         self.model = RandomForestClassifier(**kwargs)
 

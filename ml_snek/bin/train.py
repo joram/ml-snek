@@ -34,7 +34,7 @@ def main():
     parser.add_argument(
         "--dataset_kwargs",
         type=json.loads,
-        default='{"board_state_as_vector": 1}',
+        default='{"board_state_as_vector": 1, "max_size":10}',
         help="kwargs for the dataset",
     )
 
