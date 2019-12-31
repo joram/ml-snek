@@ -1,4 +1,5 @@
 import os
+import importlib
 
 from PIL import Image
 
@@ -129,3 +130,10 @@ def direction_to_onehot(direction: str) -> torch.Tensor:
     direction_onehot[direction_to_index(direction)] = 1
 
     return direction_onehot
+
+
+def load_object(object_name, object_kwargs):
+    object_module, object_name = object_name.rsplit(".", 1)
+    object_module = importlib.import_module(object_module)
+
+    return getattr(object_module, object_name)(**object_kwargs)
