@@ -3,7 +3,7 @@ import os
 from torch.utils.data import Dataset
 
 
-class JSnekDataset(Dataset):
+class JSnekBaseDataset(Dataset):
 
     CURR_DIR = os.path.dirname(os.path.abspath(__file__))
     DATA_DIR = os.path.join(CURR_DIR, "../../data/")
@@ -36,18 +36,18 @@ class JSnekDataset(Dataset):
 
                 try:
                     winner_id = self._get_winner_id(frames)
+
                 except:
-                    print(filepath, frames)
+                    # print(filepath, frames)
                     raise
+
                 if winner_id is None:
                     continue
 
-                for file_index in range(0, len(frames)-1):
+                for file_index in range(0, len(frames) - 1):
                     try:
                         self._get_direction(
-                            frames[file_index],
-                            frames[file_index + 1],
-                            winner_id
+                            frames[file_index], frames[file_index + 1], winner_id
                         )
                     except KeyError as e:
                         continue
@@ -91,7 +91,7 @@ class JSnekDataset(Dataset):
 
         if head is None or next_head is None:
             raise KeyError("missing head")
-        
+
         delta_x = next_head["x"] - head["x"]
         delta_y = next_head["y"] - head["y"]
         direction = {(0, 1): "UP", (0, -1): "DOWN", (1, 0): "RIGHT", (-1, 0): "LEFT"}[
@@ -136,4 +136,3 @@ class JSnekDataset(Dataset):
         direction = self._get_direction(frame, next_frame, self._get_winner_id(frames))
 
         return frame, self._get_winner_id(frames), direction
-
