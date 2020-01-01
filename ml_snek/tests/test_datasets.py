@@ -54,6 +54,6 @@ def test_jsnek_dataset():
 
     assert len(jsnek_flat_dataset) > 1000
 
-    jsnek_flat_dataset = JSnekDataset(max_size=10)
+    jsnek_flat_dataset = JSnekDataset(max_frames=10)
 
     assert len(jsnek_flat_dataset) == 10
